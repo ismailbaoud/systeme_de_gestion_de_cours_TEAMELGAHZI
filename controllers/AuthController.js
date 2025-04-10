@@ -2,6 +2,7 @@ const UserModel = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+let blacklistedTokens = [];
 
 
 class AuthController {
@@ -49,10 +50,29 @@ class AuthController {
           return res.status(500).json({ message: 'Login failed', error });
         }
       }
-      
+
+    async logout(req, res) {
+        try {
+            const token = req.headers['authorization']?.split(' ')[1];
+
+            if (!token) {
+                return res.status(400).json({ message: 'No token provided' });
+            }
+
+            blacklistedTokens.push(token);
+            console.log("Blacklisted Tokens:", blacklistedTokens);
+
+            res.status(200).json({ message: 'Logged out successfully' });
+        } catch (error) {
+            console.error("Logout error:", error);
+            res.status(500).json({ message: 'Logout failed', error: error.message });
+        }
+    }
 
 
- 
+    isTokenBlacklisted(token) {
+        return blacklistedTokens.includes(token);
+    }
 }
 
 module.exports = new AuthController;
