@@ -19,6 +19,7 @@ class CourseController {
     }
   }
 
+
   async findAll(req, res) {
     try {
         const courses = await CourseModel.findAll();
@@ -28,7 +29,19 @@ class CourseController {
     }
   }
 
-  
+
+  async findOne(req, res) {
+    try {
+      const id = req.params.id;
+      const course = await CourseModel.findByPk(id);
+      res.status(200).json({ message: 'Course retrieved successfully', course });
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving course', error });
+    }
+  }
+
+
+
 }
 
 module.exports = new CourseController();
