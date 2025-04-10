@@ -41,7 +41,20 @@ class CourseController {
   }
 
 
+  async update(req, res) {
+    try {
+        const {title , description} = req.body;
+      const id = req.params.id;
+      const course = await CourseModel.findByPk(id);
+      const courseUpdate = await course.update({title , description});
+      res.status(200).json({ message: 'Course updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating course', error: error.message });
+    }
+  }
 
+
+ 
 }
 
 module.exports = new CourseController();
