@@ -54,7 +54,17 @@ class CourseController {
   }
 
 
- 
+  async delete(req, res) {
+    try {
+      const id = req.params.id;
+      
+      const course = await CourseModel.findByPk(id);
+      course.destroy();
+      res.status(200).json({ message: 'Course deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting course', error });
+    }
+  }
 }
 
 module.exports = new CourseController();
