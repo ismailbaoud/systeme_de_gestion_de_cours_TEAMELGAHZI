@@ -19,6 +19,15 @@ class CourseController {
     }
   }
 
+  async findAll(req, res) {
+    try {
+        const courses = await CourseModel.findAll();
+      res.status(200).json({message: 'Courses retrieved successfully', courses});
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving courses', error });
+    }
+  }
+
   
 }
 
