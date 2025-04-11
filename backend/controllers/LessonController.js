@@ -48,12 +48,10 @@ class LessonController {
 
     async findByModule(req, res) {
       try {
-        const { module_id } = req.params; // Extract module_id from the URL parameters
-    
-        // Query to find lessons that match the module_id
+        const { module_id } = req.params;
         const lessons = await LessonModel.findAll({
           where: {
-            module_id: module_id // Filter lessons by module_id only
+            module_id: module_id 
           }
         });
     
@@ -61,7 +59,7 @@ class LessonController {
           return res.status(404).json({ message: 'Aucune leçon trouvée pour ce module' });
         }
     
-        res.status(200).json({ lessons }); // Return lessons as response
+        res.status(200).json({ lessons }); 
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erreur lors de la récupération des leçons' });
