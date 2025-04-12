@@ -30,6 +30,10 @@ LessonModel.init({
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  done: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 }, {
   sequelize,
   modelName: 'Lesson',
