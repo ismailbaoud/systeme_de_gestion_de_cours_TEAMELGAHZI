@@ -9,5 +9,7 @@ router.get('/findAll', LessonController.findAll);
 router.get('/findOne/:id', LessonController.findOne);
 router.put('/:id/update', LessonController.update);
 router.delete('/:id/delete', LessonController.delete);
+router.put('/:lesson_id/complete', LessonController.markLessonComplete);
+
 
 module.exports = router

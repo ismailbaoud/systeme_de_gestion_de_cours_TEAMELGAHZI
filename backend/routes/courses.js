@@ -12,6 +12,7 @@ router.post('/create' , CourseController.create);
 router.get('/:id' , CourseController.findOne);
 router.put('/:id/update' , CourseController.update);
 router.delete('/:id/delete' , CourseController.delete);
+router.get('/:course_id/progress/:user_id' , CourseController.getCourseProgress);
 
 
 module.exports = router;
