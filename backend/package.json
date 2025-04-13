@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npx nodemon app.js"
+    "start": "npm install express axios jsonwebtoken bcryptjs multer&& mkdir uploads && npx nodemon app.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
