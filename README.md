@@ -9,7 +9,7 @@ Ce projet est une application complète de gestion de cours en ligne, développ�
 
 ## 🧰 Stack Technique
 
-- **Frontend:** React.js (JavaScript)
+- **Frontend:** React.js (JavaScript) ,Tailwind (css)
 - **Backend:** Node.js, Express.js
 - **Base de données:** MySQL (via Sequelize)
 - **Authentification:** JWT
