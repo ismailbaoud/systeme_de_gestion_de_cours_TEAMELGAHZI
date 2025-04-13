@@ -3,7 +3,7 @@
 
 Ce projet est une application complète de gestion de cours en ligne, développée dans le cadre de l’évaluation de stage full-stack chez **TeamElGhazi**.
 
-🛠️ Réalisé en seulement **4 jours** (étude + application) avec une approche pratique et agile.
+🛠️ Réalisé en seulement **5 jours** (étude + application) avec une approche pratique et agile.
 
 ---
 
