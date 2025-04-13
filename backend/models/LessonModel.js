@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
+const ModuleModel = require('./ModuleModel');
 
 class LessonModel extends Model {}
 
@@ -13,6 +14,13 @@ LessonModel.init({
     type: DataTypes.INTEGER,
     references: {
       model: 'modules',
+      key: 'id'
+    }
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
       key: 'id'
     }
   },
@@ -39,6 +47,11 @@ LessonModel.init({
   modelName: 'Lesson',
   tableName: 'lessons',
   timestamps: true
+});
+
+LessonModel.belongsTo(ModuleModel, {
+  foreignKey: 'module_id',
+  onDelete: 'CASCADE'
 });
 
 module.exports = LessonModel;
