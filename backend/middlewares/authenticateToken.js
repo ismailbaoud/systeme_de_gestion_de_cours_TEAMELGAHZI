@@ -2,10 +2,12 @@ const jwt = require('jsonwebtoken');
 const AuthController = require('../controllers/AuthController');
 
 const authenticateToken = (req, res, next) => {
-    const token = req.session.token;
+    const authHeader = req.headers['authorization'];    
+    const token = authHeader && authHeader.split(' ')[1]; 
+    
 
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided in session.' });
+        return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
 
     if (AuthController.isTokenBlacklisted && AuthController.isTokenBlacklisted(token)) {
