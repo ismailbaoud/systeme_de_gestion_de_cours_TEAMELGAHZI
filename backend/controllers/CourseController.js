@@ -1,4 +1,6 @@
 const CourseModel = require('../models/CourseModel');
+const LessonModel = require('../models/LessonModel');
+const ModuleModel = require('../models/ModuleModel');
 
 class CourseController {
 
@@ -31,6 +33,7 @@ class CourseController {
   }
 
 
+
   async findOne(req, res) {
     try {
       const id = req.params.id;
@@ -53,6 +56,49 @@ class CourseController {
       res.status(500).json({ message: 'Error updating course', error: error.message });
     }
   }
+
+
+  async getCourseProgress(req, res) {
+    try {
+      const { course_id, user_id } = req.params;
+  
+      const totalLessons = await LessonModel.count({
+        include: {
+          model: ModuleModel,
+          where: {
+            course_id: course_id,
+          },
+        },
+      });
+  
+      const completedLessons = await LessonModel.count({
+        include: {
+          model: ModuleModel,
+          where: {
+            course_id: course_id,
+          },
+        },
+        where: {
+          done: true,
+          user_id: user_id
+        },
+      });
+  
+      const progressPercentage = (totalLessons === 0) ? 0 : (completedLessons / totalLessons) * 100;
+  
+      res.status(200).json({
+        totalLessons,
+        completedLessons,
+        progressPercentage: progressPercentage.toFixed(2),
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving progress', error: error.message });
+    }
+  }
+  
+  
+
 
 
   async delete(req, res) {

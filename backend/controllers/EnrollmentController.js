@@ -1,92 +1,67 @@
-const EnrollmentModel = require('../models/EnrollmentModel');
-const UserModel = require('../models/UserModel');
-const CourseModel = require('../models/CourseModel');
+const Enrollment = require('../models/EnrollmentModel');
+const Course = require('../models/CourseModel');
 
 class EnrollmentController {
   async create(req, res) {
+    const { user_id, course_id } = req.body;
     try {
-      const { user_id, course_id } = req.body;
-
-      const existingEnrollment = await EnrollmentModel.findOne({
-        where: { user_id, course_id }
-      });
-
-      if (existingEnrollment) {
-        return res.status(400).json({ message: 'Utilisateur déjà inscrit à ce cours.' });
+      const exists = await Enrollment.findOne({ where: { user_id, course_id } });
+      if (exists) {
+        return res.status(400).json({ message: 'User already enrolled in this course' });
       }
 
-      const enrollment = await EnrollmentModel.create({ user_id, course_id });
-
+      const enrollment = await Enrollment.create({ user_id, course_id });
       res.status(201).json(enrollment);
     } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la création de l\'inscription', error });
+      res.status(500).json({ message: 'Error creating enrollment', error: error.message });
     }
   }
 
-  async findAll(req, res) {
+  async findByUser(req, res) {
+    const { user_id } = req.params;
     try {
-      const enrollments = await EnrollmentModel.findAll({
-        include: [UserModel, CourseModel]
+      const enrollments = await Enrollment.findAll({
+        where: { user_id },
+        include: [
+          {
+            model: Course,
+            as: 'Course',
+            attributes: ['id', 'title', 'description'] 
+          }
+        ],
+        attributes: [] 
       });
-
-      res.status(200).json(enrollments);
+  
+      const courses = enrollments.map(enrollment => enrollment.Course);
+  
+      res.status(200).json(courses);
+  
     } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la récupération des inscriptions', error });
+      res.status(500).json({ message: 'Error fetching enrollments', error: error.message });
     }
   }
 
-  async findOne(req, res) {
+  async check(req, res) {
+    const { user_id, course_id } = req.body;
     try {
-      const { id } = req.params;
-
-      const enrollment = await EnrollmentModel.findByPk(id, {
-        include: [UserModel, CourseModel]
-      });
-
-      if (!enrollment) {
-        return res.status(404).json({ message: 'Inscription non trouvée.' });
-      }
-
-      res.status(200).json(enrollment);
+      const exists = await Enrollment.findOne({ where: { user_id, course_id } });
+      res.status(200).json({ enrolled: !!exists });
     } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la récupération de l\'inscription', error });
-    }
-  }
-
-  async update(req, res) {
-    try {
-      const { id } = req.params;
-      const { user_id, course_id } = req.body;
-
-      const enrollment = await EnrollmentModel.findByPk(id);
-      if (!enrollment) {
-        return res.status(404).json({ message: 'Inscription non trouvée.' });
-      }
-
-      enrollment.user_id = user_id;
-      enrollment.course_id = course_id;
-      await enrollment.save();
-
-      res.status(200).json(enrollment);
-    } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'inscription', error });
+      res.status(500).json({ message: 'Error checking enrollment', error: error.message });
     }
   }
 
   async delete(req, res) {
+    const { user_id, course_id } = req.body;
     try {
-      const { id } = req.params;
-
-      const enrollment = await EnrollmentModel.findByPk(id);
-      if (!enrollment) {
-        return res.status(404).json({ message: 'Inscription non trouvée.' });
+      const deleted = await Enrollment.destroy({ where: { user_id, course_id } });
+      if (deleted) {
+        res.status(200).json({ message: 'Enrollment deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Enrollment not found' });
       }
-
-      await enrollment.destroy();
-
-      res.status(200).json({ message: 'Inscription supprimée avec succès.' });
     } catch (error) {
-      res.status(500).json({ message: 'Erreur lors de la suppression de l\'inscription', error });
+      res.status(500).json({ message: 'Error deleting enrollment', error: error.message });
     }
   }
 }

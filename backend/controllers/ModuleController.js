@@ -1,4 +1,4 @@
-const ModuleModel = require('../models/MudelModel');
+const ModuleModel = require('../models/ModuleModel');
 
 class ModuleController {
     async create(req, res) {
